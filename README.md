@@ -1,7 +1,7 @@
 ## 🚀 orbis11 — No more getting lost in a maze of folders and files
 Stop wasting time digging through endless folders and scattered files. orbis11 gives you a clear, visual map of your projects so you find what you need instantly.
 
-[📦Download now for Windows](https://github.com/jason0800/orbis11/releases/download/v1.0.0-beta/orbis11.Setup.1.0.0-beta.exe)
+📦Window version comming soon
 
 📦Apple version coming soon...
 
