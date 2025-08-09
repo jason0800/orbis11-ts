@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useRef } from 'react'
 import { ReactFlow, Background, Controls, MiniMap, ControlButton } from '@xyflow/react';
 import { Toaster, toast } from 'react-hot-toast';
-import { LucideRefreshCw } from 'lucide-react';
 import useFlowHandlers from '../hooks/useFlowHandlers';
 import FolderNode from './FolderNode';
 import SideBar from './SideBar';

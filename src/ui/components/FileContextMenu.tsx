@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Route, Trash2, EditIcon, ChevronRight, Copy } from 'lucide-react';
+import type { FileContextMenuProps } from "../types";
 
-export default function FileContextMenu(props) {
+export default function FileContextMenu(props: FileContextMenuProps) {
     const [showInput, setShowInput] = useState(false)
     const [fileName, setFileName] = useState("")
 

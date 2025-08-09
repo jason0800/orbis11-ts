@@ -2,21 +2,6 @@ import path from "node:path"
 import fs from "node:fs"
 import { v4 as uuidv4 } from 'uuid';
 
-interface File {
-    id: string,
-    name: string,
-    path: string,
-    type: "file",
-    size: string,
-}
-
-interface Subfolder {
-    id: string,
-    name: string,
-    path: string,
-    type: "folder",
-}
-
 function formatBytes(bytes: number): string {
     if (bytes === 0) return '0 b';
 
@@ -33,7 +18,7 @@ export function isDev(): boolean {
     return globalThis.process.env.NODE_ENV === 'development';
 }
 
-export function scanFolder(dirPath: string) {
+export function scanFolder(dirPath: string): ScannedFolder {
     const folderName = path.basename(dirPath)
     const folderId = uuidv4().substring(20)
     const rawItems = fs.readdirSync(dirPath)

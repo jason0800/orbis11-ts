@@ -1,4 +1,6 @@
-export default function ConfirmDialog({ title, message, onConfirm, onCancel }) {
+import type { ConfirmDialogProps } from "../types"
+
+export default function ConfirmDialog({ title, message, onConfirm, onCancel }: ConfirmDialogProps) {
   return (
     <div className="dialog-overlay">
       <div className="dialog-box">

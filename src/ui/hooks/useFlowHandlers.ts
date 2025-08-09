@@ -1,38 +1,15 @@
 import { useState, useCallback } from 'react';
 import { useReactFlow, applyNodeChanges } from '@xyflow/react';
 import { toast } from 'react-hot-toast';
-
-// TYPES 
-interface Position {
-  x: number,
-  y: number,
-}
-
-// state types
-interface WorldContextMenu {
-  position: Position,
-  file: string,
-}
-
-interface ConfirmDialog {
-  title: string,
-  message: string,
-  onConfirm: () => void,
-}
-
-interface ClipboardItem {
-  itemPath: string,
-  type: 'file' | 'folder'
-}
-///
+import type { Position, HeaderContextMenu, FileContextMenu, FolderContextMenu, WorldContextMenu, ConfirmDialog, ClipboardItem } from '../types';
 
 // custom hook
 export default function useFlowHandlers() {  // module
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
-  const [headerContextMenu, setHeaderContextMenu] = useState(null)
-  const [fileContextMenu, setFileContextMenu] = useState(null)
-  const [folderContextMenu, setFolderContextMenu] = useState(null)
+  const [headerContextMenu, setHeaderContextMenu] = useState<HeaderContextMenu | null>(null)
+  const [fileContextMenu, setFileContextMenu] = useState<FileContextMenu | null>(null)
+  const [folderContextMenu, setFolderContextMenu] = useState<FolderContextMenu | null >(null)
   const [worldContextMenu, setWorldContextMenu] = useState<WorldContextMenu | null>(null)
   const [confirmDialog, setConfirmDialog] = useState<ConfirmDialog | null>(null)
   const [clipboardItem, setClipboardItem] = useState<ClipboardItem | null>(null);
@@ -151,7 +128,7 @@ export default function useFlowHandlers() {  // module
   ///////////////////// React Flow Node Header Context Menu Handlers ////////////////////////////
 
   // handler to open header context menu when r-clicking on folder node header
-  const handleHeaderContextMenu = useCallback((e, id, dirPath, wrapperRef) => {
+  const handleHeaderContextMenu = useCallback((e, id: string, dirPath: string, wrapperRef) => {
     e.preventDefault();
     setFileContextMenu(null);
     setFolderContextMenu(null);
@@ -180,16 +157,16 @@ export default function useFlowHandlers() {  // module
 
     const position = { x, y }
 
-    setHeaderContextMenu({id, dirPath, position, flipped,  });
+    setHeaderContextMenu({id, dirPath, position, flipped});
   }, []);
 
-  const handleHideNode = (id) => {
+  const handleHideNode = (id: string) => {
     const unhiddenNodes = (nodes.filter((node) => node.id !== id))
     setNodes(unhiddenNodes)
     setHeaderContextMenu(null)
   }
 
-  const handleCopyPath = async (dirPath) => {
+  const handleCopyPath = async (dirPath: string) => {
     const result = await window.electronAPI.copyPath(dirPath)
     if (result.success) {
       toast.success(result.message)
@@ -202,7 +179,7 @@ export default function useFlowHandlers() {  // module
     setFolderContextMenu(null)
   }
 
-  const handleCreateFile = async (dirPath, fileName) => {
+  const handleCreateFile = async (dirPath: string, fileName: string) => {
     const result = await window.electronAPI.createFile(dirPath, fileName)
     if (result.success) {
       handleRefresh()
@@ -213,7 +190,7 @@ export default function useFlowHandlers() {  // module
     setHeaderContextMenu(null)
   }
 
-  const handleCreateFolder = async (dirPath, folderName) => {
+  const handleCreateFolder = async (dirPath: string, folderName: string) => {
     const result = await window.electronAPI.createFolder(dirPath, folderName)
     
     if (result.success) {
@@ -230,7 +207,7 @@ export default function useFlowHandlers() {  // module
   //////////// File Context Menu Handlers //////////////////////////////
 
   // handler to open file context menu when r-clicking on file
-  const handleFileContextMenu = useCallback((e, filePath, itemName, dirPath, wrapperRef) => {
+  const handleFileContextMenu = useCallback((e, itemPath: string, itemName: string, dirPath: string, wrapperRef) => {
     e.preventDefault()
     setHeaderContextMenu(null)
     setFolderContextMenu(null)
@@ -259,10 +236,10 @@ export default function useFlowHandlers() {  // module
 
     const position = { x, y }
 
-    setFileContextMenu({position, flipped, filePath, itemName, dirPath})
+    setFileContextMenu({position, flipped, itemPath, itemName, dirPath})
   }, [])
   
-  const handleRenameFile = async (dirPath, filePath, fileName) => {
+  const handleRenameFile = async (dirPath: string, filePath: string, fileName: string) => {
     const res = await window.electronAPI.renameFile(dirPath, filePath, fileName);
 
     if (!res.success) {
@@ -276,7 +253,7 @@ export default function useFlowHandlers() {  // module
     setFileContextMenu(null);
   };
   
-  const handleDeleteFile = async (filePath) => {
+  const handleDeleteFile = async (filePath: string) => {
     const res = await window.electronAPI.deleteFile(filePath);
 
     if (!res.success) {
@@ -319,7 +296,7 @@ export default function useFlowHandlers() {  // module
   ////////////////////////// Folder Context Menu Handlers //////////////////
 
   // handler to open folder context menu when r-clicking on folder
-  const handleFolderContextMenu = useCallback((e, folderPath, itemName, dirPath, wrapperRef) => {
+  const handleFolderContextMenu = useCallback((e, itemPath: string, itemName: string, dirPath: string, wrapperRef) => {
     e.preventDefault()
     setHeaderContextMenu(null)
     setFileContextMenu(null)
@@ -348,11 +325,11 @@ export default function useFlowHandlers() {  // module
 
     const position: Position = { x, y }
 
-    setFolderContextMenu({position: position, flipped: flipped, folderPath: folderPath, itemName: itemName, dirPath: dirPath})
+    setFolderContextMenu({position: position, flipped: flipped, itemPath: itemPath, itemName: itemName, dirPath: dirPath})
   }, [])
 
   // handler to delete folder
-  const handleDeleteFolder = async (folderPath) => {
+  const handleDeleteFolder = async (folderPath: string) => {
     const result = await window.electronAPI.deleteFolder(folderPath)
     if (result.success) {
       toast(result.message, { icon: '🗑️' })
@@ -365,7 +342,7 @@ export default function useFlowHandlers() {  // module
   }
 
   // rename folder
-  const handleRenameFolder = async (dirPath, folderPath, folderName) => {
+  const handleRenameFolder = async (dirPath: string, folderPath: string, folderName: string) => {
     console.log("in handleRenameFolder")
     const res = await window.electronAPI.renameFolder(dirPath, folderPath, folderName);
 

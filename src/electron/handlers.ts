@@ -32,7 +32,13 @@ export function handlers() {
     })
 
     ipcMain.handle('scan-folder', (event, dirPath) => {
-        return scanFolder(dirPath)
+        try {
+            const data = scanFolder(dirPath)
+            return { success: true, data: data }
+        } catch (err) {
+            console.error(err)
+            return { success: false, message: "Error scanning folder" }
+        }
     })
 
     // copy path to clipboard handler
